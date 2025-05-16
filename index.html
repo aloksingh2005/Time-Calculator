@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeCalc AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="light-mode">
+    <nav class="navbar">
+        <div class="nav-left">
+            <button class="menu-toggle" id="toggleSidebar" aria-label="Toggle sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h1 class="nav-title">TimeCalc AI</h1>
+        </div>
+        <div class="nav-right">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar" id="sidebar">
+        <h3>TimeCalc AI</h3>
+        <ul>
+            <li><a href="#calculator" data-tab="calculator">Calculator</a></li>
+            <li><a href="#history" data-tab="history">History</a></li>
+            <li><a href="#customers" data-tab="customers">Customers</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>TimeCalc AI</h1>
+            <p class="subtitle">Smart Time and Cost Calculator</p>
+            <div class="clock-container">
+                <span id="liveClock" aria-live="polite"></span>
+            </div>
+        </header>
+
+        <main>
+            <section class="tab-content" id="calculator" role="region" aria-label="Time and Rate Calculator">
+                <div class="time-input-container">
+                    <h2>Add Transaction</h2>
+                    <div class="time-inputs">
+                        <div class="input-group">
+                            <label for="customerSelect">Customer</label>
+                            <select id="customerSelect" class="select-input"></select>
+                        </div>
+                        <div class="input-group">
+                            <label for="startTime">Start Time</label>
+                            <input type="datetime-local" id="startTime">
+                        </div>
+                        <div class="input-group">
+                            <label for="endTime">End Time</label>
+                            <input type="datetime-local" id="endTime">
+                        </div>
+                        <div class="input-group">
+                            <label for="currencySelect">Currency</label>
+                            <select id="currencySelect" class="select-input">
+                                <option value="₹">INR (₹)</option>
+                                <option value="$">USD ($)</option>
+                                <option value="€">EUR (€)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="rateType">Rate Type</label>
+                            <select id="rateType" class="select-input">
+                                <option value="hourly" data-default="120">Hourly Rate</option>
+                                <option value="minute" data-default="2">Per Minute Rate</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="rateAmount">Rate Amount</label>
+                            <input type="number" id="rateAmount" step="0.01" placeholder="Enter rate amount">
+                        </div>
+                    </div>
+                    <button id="addTransaction" class="btn">
+                        <i class="fas fa-plus"></i> Add Transaction
+                    </button>
+                    <div class="data-controls">
+                        <button id="exportJSON" class="btn btn-secondary">
+                            <i class="fas fa-download"></i> Export JSON
+                        </button>
+                        <button id="exportCSV" class="btn btn-secondary">
+                            <i class="fas fa-file-csv"></i> Export CSV
+                        </button>
+                        <label for="importData" class="btn btn-secondary">
+                            <i class="fas fa-upload"></i> Import Data
+                            <input type="file" id="importData" accept=".json" style="display: none;">
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <section class="tab-content" id="history" role="region" aria-label="Transaction History" style="display: none;">
+                <h2>Transaction History</h2>
+                <div class="history-controls">
+                    <div class="customer-filter">
+                        <select id="historyCustomerFilter" class="select-input">
+                            <option value="">All Customers</option>
+                        </select>
+                    </div>
+                    <div class="search-bar">
+                        <input type="text" id="historySearch" placeholder="Search by customer, date, or amount">
+                        <button id="clearSearch" class="btn btn-secondary"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="history-summary" id="historySummary" style="display: none;">
+                    <div class="summary-details">
+                        <span class="date-range"></span>
+                        <span class="total-time"></span>
+                        <span class="total-amount"></span>
+                    </div>
+                </div>
+                <div class="history-container" id="historyList"></div>
+                <div class="bulk-actions" id="bulkActions" style="display: none;">
+                    <div class="bulk-info">
+                        <span id="selectedCount">0 items selected</span>
+                    </div>
+                    <div class="bulk-buttons">
+                        <button id="bulkAddBtn" class="btn">
+                            <i class="fas fa-plus"></i> Add Selected
+                        </button>
+                        <button id="bulkDeleteBtn" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Delete Selected
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="tab-content" id="customers" role="region" aria-label="Customer Management"
+                style="display: none;">
+                <h2>Customers</h2>
+                <div class="customer-input">
+                    <div class="input-group">
+                        <label for="customerName">Customer Name</label>
+                        <input type="text" id="customerName" placeholder="Enter customer name">
+                    </div>
+                    <div class="input-group">
+                        <label for="customerContact">Contact Info</label>
+                        <input type="text" id="customerContact" placeholder="Enter contact info">
+                    </div>
+                    <button id="addCustomer" class="btn">Add Customer</button>
+                </div>
+                <div class="input-group">
+                    <label for="customerSearch">Search Customers</label>
+                    <input type="text" id="customerSearch" placeholder="Search by name">
+                </div>
+                <div class="customer-list" id="customerList"></div>
+            </section>
+
+            <div id="notification" class="notification" role="alert"></div>
+        </main>
+    </div>
+
+    <div id="actionModal" class="modal">
+        <div class="modal-content">
+            <p id="modalMessage"></p>
+            <div id="editForm" class="edit-form" style="display: none;">
+                <div class="input-group">
+                    <label for="editField">Edit Value</label>
+                    <input type="text" id="editField">
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button id="confirmAction" class="btn btn-danger">Confirm</button>
+                <button id="cancelAction" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
