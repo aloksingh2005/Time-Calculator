@@ -788,14 +788,14 @@ DOM.importDataInput.addEventListener('change', async (e) => {
 
 // Event Listeners
 // Hard refresh button
+// Normal refresh button with data persistence
 DOM.hardRefresh.addEventListener('click', () => {
-    if (confirm('Are you sure you want to refresh the page? Any unsaved changes will be lost.')) {
-        window.location.reload(true);
-    }
-});
-DOM.hardRefresh.addEventListener('click', () => {
-    if (confirm('Are you sure you want to refresh the page? Any unsaved changes will be lost.')) {
-        window.location.reload(true);
+    if (confirm('Refresh the page? Your data will be saved.')) {
+        // Auto-save before refresh
+        saveToIndexedDB().then(() => {
+            saveCustomersToIndexedDB();
+            window.location.reload();
+        });
     }
 });
 
@@ -824,6 +824,15 @@ function scheduleAutoSave() {
         await saveCustomersToIndexedDB();
     }, 1000); // Save after 1 second of inactivity
 }
+
+// Auto-save data before page unload
+window.addEventListener('beforeunload', () => {
+    // Save to IndexedDB
+    saveToIndexedDB();
+    saveCustomersToIndexedDB();
+    // Also save to localStorage as backup
+    backupToLocalStorage();
+});
 
 // Add error recovery
 window.addEventListener('unhandledrejection', async (event) => {
