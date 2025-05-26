@@ -1,5 +1,6 @@
 // DOM Elements
 const DOM = {
+    hardRefresh: document.getElementById('hardRefresh'),
     themeToggle: document.getElementById('themeToggle'),
     body: document.body,
     toggleSidebar: document.getElementById('toggleSidebar'),
@@ -786,6 +787,18 @@ DOM.importDataInput.addEventListener('change', async (e) => {
 });
 
 // Event Listeners
+// Hard refresh button
+DOM.hardRefresh.addEventListener('click', () => {
+    if (confirm('Are you sure you want to refresh the page? Any unsaved changes will be lost.')) {
+        window.location.reload(true);
+    }
+});
+DOM.hardRefresh.addEventListener('click', () => {
+    if (confirm('Are you sure you want to refresh the page? Any unsaved changes will be lost.')) {
+        window.location.reload(true);
+    }
+});
+
 DOM.addTransactionBtn.addEventListener('click', addTransaction);
 DOM.addCustomerBtn.addEventListener('click', addCustomer);
 let searchTimeout;
